@@ -120,7 +120,7 @@ export const updateWorkspace = mutation({
 });
 
 export const removeWorkspace = mutation({
-	args: { workspaceId: v.id("workspaces") },
+	args: { workspaceId: v.id("workspaces")},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
 
