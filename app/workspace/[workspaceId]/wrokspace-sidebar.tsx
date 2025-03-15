@@ -1,9 +1,10 @@
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetWorkspaceByID } from "@/features/workspaces/api/use-get-workspace-by-id";
-import { AlertTriangle, Loader } from "lucide-react";
+import { AlertTriangle, Loader, MessageSquareText } from "lucide-react";
 import React from "react";
 import WorkspaceHeader from "./workspace-header";
+import SidebarItem from "./sidebar-item";
 
 function WorkspaceSidebar() {
 	const workspaceId = useWorkspaceId();
@@ -32,7 +33,18 @@ function WorkspaceSidebar() {
 	return (
 		<div className="flex flex-col h-full bg-[#5e2c5f]">
 			{/* Workspace header */}
-			<WorkspaceHeader workspace={workspaceData} isAdmin={memberData.role === "admin"}/>
+			<WorkspaceHeader
+				workspace={workspaceData}
+				isAdmin={memberData.role === "admin"}
+			/>
+			<div className="flex flex-col px-2 mt-3">
+				<SidebarItem
+					label="Threads"
+					icon={MessageSquareText}
+					id="threads"
+					variant="active"
+				/>
+			</div>
 		</div>
 	);
 }
