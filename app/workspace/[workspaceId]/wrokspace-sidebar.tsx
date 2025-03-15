@@ -7,6 +7,8 @@ import WorkspaceHeader from "./workspace-header";
 import SidebarItem from "./sidebar-item";
 import { useGetChannelByWorkspaceId } from "@/features/channels/api/use-get-channel-by-workspace-id";
 import WorkspaceSection from "./workspace-section";
+import { useGetMembers } from "@/features/members/api/use-get-members";
+import UserItem from "./user-item";
 
 function WorkspaceSidebar() {
 	const workspaceId = useWorkspaceId();
@@ -17,6 +19,8 @@ function WorkspaceSidebar() {
 	const { data: workspaceData, isLoading: isWorkspaceLoading } = useGetWorkspaceByID({
 		workspaceId,
 	});
+
+	const { memberArrayDataLoading, membersArrayData } = useGetMembers({ workspaceId });
 
 	if (isMemberLoading || isWorkspaceLoading) {
 		return (
@@ -71,6 +75,19 @@ function WorkspaceSidebar() {
 						</div>
 					))}
 				</WorkspaceSection>
+
+				{/* Member Section */}
+				{membersArrayData?.map((memberItem) => (
+					<div key={memberItem?._id}>
+						<UserItem
+							id={memberItem?._id}
+							label={memberItem?.user?.name}
+							image={memberItem.user.image}
+							variant={"active"}
+						/>
+						
+					</div>
+				))}
 			</div>
 		</div>
 	);
