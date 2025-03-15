@@ -37,7 +37,7 @@ function SidebarItem({ label, id, icon: Icon, variant }: SidebarItemProps) {
 		<Button asChild variant="transparent" size={"sm"} className={cn(sidebarItemVariantProps({variant}))}>
 			<Link href={`/workspace/${workspaceId}/channel/${id}`}>
 				<Icon className="size-3.5 mr-1 shrink-0"/>
-				<span className="text-sm truncate">{label}</span>
+				<span className="text-xs truncate">{label}</span>
 			</Link>
 		</Button>
 	);

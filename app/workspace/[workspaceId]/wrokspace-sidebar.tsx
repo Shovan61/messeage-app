@@ -1,13 +1,17 @@
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetWorkspaceByID } from "@/features/workspaces/api/use-get-workspace-by-id";
-import { AlertTriangle, Loader, MessageSquareText, SendHorizonal } from "lucide-react";
+import { AlertTriangle, HashIcon, Loader, MessageSquareText, SendHorizonal } from "lucide-react";
 import React from "react";
 import WorkspaceHeader from "./workspace-header";
 import SidebarItem from "./sidebar-item";
+import { useGetChannelByWorkspaceId } from "@/features/channels/api/use-get-channel-by-workspace-id";
+import WorkspaceSection from "./workspace-section";
 
 function WorkspaceSidebar() {
 	const workspaceId = useWorkspaceId();
+
+	const { channelData, isChannelLOading } = useGetChannelByWorkspaceId({ workspaceId });
 
 	const { data: memberData, isLoading: isMemberLoading } = useCurrentMember({ workspaceId });
 	const { data: workspaceData, isLoading: isWorkspaceLoading } = useGetWorkspaceByID({
@@ -50,6 +54,23 @@ function WorkspaceSidebar() {
 					id="threads"
 					variant="default"
 				/>
+
+				<WorkspaceSection
+					label="Channels"
+					hint="New Channel"
+					onNew={() => {}}
+				>
+					{channelData?.map((curItem) => (
+						<div key={curItem?._id}>
+							<SidebarItem
+								label={curItem?.name}
+								icon={HashIcon}
+								id={curItem._id}
+								variant="default"
+							/>
+						</div>
+					))}
+				</WorkspaceSection>
 			</div>
 		</div>
 	);
