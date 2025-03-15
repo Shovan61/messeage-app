@@ -16,19 +16,23 @@ interface WorkspaceSectionProps {
 function WorkspaceSection({ label, children, hint, onNew }: WorkspaceSectionProps) {
 	const [on, toggle] = useToggle(true);
 
+	const hanldeToggle = () => {
+		toggle();
+	};
+
 	return (
 		<div className="flex mt-3 px-2 flex-col">
 			<div className="flex items-center px-3.5 group">
 				<Button
 					variant="transparent"
 					className="p-0.5 text-sm text-[#f9edffcc] shrink-0 size-6"
+					onClick={hanldeToggle}
 				>
 					<FaCaretDown
 						className={cn(
 							"size-4 transition-transform",
 							on && "-rotate-90"
 						)}
-						onClick={toggle}
 					/>
 				</Button>
 
