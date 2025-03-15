@@ -1,7 +1,7 @@
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
 import { useCurrentMember } from "@/features/members/api/use-current-member";
 import { useGetWorkspaceByID } from "@/features/workspaces/api/use-get-workspace-by-id";
-import { AlertTriangle, Loader, MessageSquareText } from "lucide-react";
+import { AlertTriangle, Loader, MessageSquareText, SendHorizonal } from "lucide-react";
 import React from "react";
 import WorkspaceHeader from "./workspace-header";
 import SidebarItem from "./sidebar-item";
@@ -42,7 +42,13 @@ function WorkspaceSidebar() {
 					label="Threads"
 					icon={MessageSquareText}
 					id="threads"
-					variant="active"
+					variant="default"
+				/>
+				<SidebarItem
+					label="Drafts & Sent"
+					icon={SendHorizonal}
+					id="threads"
+					variant="default"
 				/>
 			</div>
 		</div>
