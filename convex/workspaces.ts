@@ -25,7 +25,7 @@ export const getWorkSpaces = query({
 
 		const workspaceIds = members?.map((curMember) => curMember?.workspaceId);
 
-		let workspaces = [];
+		const workspaces = [];
 
 		for (const workspaceId of workspaceIds) {
 			const workspace = await ctx.db.get(workspaceId);

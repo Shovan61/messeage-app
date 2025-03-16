@@ -44,7 +44,7 @@ function UserItem({ id, label = "Member", image, variant }: UserItemProps) {
 			<Link href={`/workspace/${workspaceId}/member/${id}`}>
 				<Avatar className="size-5 rounded-md mr-1">
 					<AvatarImage className="rounded-md" src={image} />
-					<AvatarFallback className="rounded-md">
+					<AvatarFallback className="rounded-md bg-sky-500 text-white text-xs">
 						{avatarFallback}
 					</AvatarFallback>
 				</Avatar>

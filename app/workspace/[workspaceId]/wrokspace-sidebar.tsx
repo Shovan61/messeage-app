@@ -77,17 +77,22 @@ function WorkspaceSidebar() {
 				</WorkspaceSection>
 
 				{/* Member Section */}
-				{membersArrayData?.map((memberItem) => (
-					<div key={memberItem?._id}>
-						<UserItem
-							id={memberItem?._id}
-							label={memberItem?.user?.name}
-							image={memberItem.user.image}
-							variant={"active"}
-						/>
-						
-					</div>
-				))}
+				<WorkspaceSection
+					label="Direct Messages"
+					hint="New direct message"
+					onNew={() => {}}
+				>
+					{membersArrayData?.map((memberItem) => (
+						<div key={memberItem?._id}>
+							<UserItem
+								id={memberItem?._id}
+								label={memberItem?.user?.name}
+								image={memberItem.user.image}
+								// variant={"defalut"}
+							/>
+						</div>
+					))}
+				</WorkspaceSection>
 			</div>
 		</div>
 	);
