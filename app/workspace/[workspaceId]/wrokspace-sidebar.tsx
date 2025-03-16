@@ -9,9 +9,12 @@ import { useGetChannelByWorkspaceId } from "@/features/channels/api/use-get-chan
 import WorkspaceSection from "./workspace-section";
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import UserItem from "./user-item";
+import { useCreateChannelModal } from "@/features/channels/store/use-create-channel-modal";
 
 function WorkspaceSidebar() {
 	const workspaceId = useWorkspaceId();
+
+	const [_open, setOpen] = useCreateChannelModal();
 
 	const { channelData, isChannelLOading } = useGetChannelByWorkspaceId({ workspaceId });
 
@@ -62,7 +65,7 @@ function WorkspaceSidebar() {
 				<WorkspaceSection
 					label="Channels"
 					hint="New Channel"
-					onNew={() => {}}
+					onNew={() => setOpen(true)}
 				>
 					{channelData?.map((curItem) => (
 						<div key={curItem?._id}>
