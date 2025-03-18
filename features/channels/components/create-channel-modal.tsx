@@ -8,10 +8,13 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCreateChannelModal } from "../store/use-create-channel-modal";
 import { useCreateChannel } from "../api/use-create-channel";
+import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
+import { Loader } from "lucide-react";
 
 function CreateChannelModal() {
+	const workspaceId = useWorkspaceId();
 	const router = useRouter();
-	const { isPending: isChanelCreationPending, mutate } = useCreateChannel();
+	const { isPending: isChanelCreationPending, mutate: createChannel } = useCreateChannel();
 
 	const [open, setOpen] = useCreateChannelModal();
 
@@ -24,11 +27,30 @@ function CreateChannelModal() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
 		try {
-			
+			createChannel(
+				{
+					name: name,
+					workspaceId,
+				},
+				{
+					onSuccess() {
+						handleClose();
+						// Todo 
+						router.push(`/workspace/${workspaceId}`);
+						toast.success("Created Ssuccessfully!");
+					},
+					onError(error) {
+						handleClose();
+						console.log(error);
+
+						toast.success("Something went wrong!");
+					},
+				}
+			);
 		} catch (error) {
 			console.log(error);
-			
 		}
 	};
 
@@ -46,7 +68,7 @@ function CreateChannelModal() {
 
 				<form action="submit" className="space-y-4" onSubmit={handleSubmit}>
 					<Input
-						disabled={false}
+						disabled={isChanelCreationPending}
 						required
 						autoFocus
 						minLength={3}
@@ -55,7 +77,12 @@ function CreateChannelModal() {
 						placeholder="ex: my-channel"
 					/>
 					<div className="flex justify-end">
-						<Button disabled={false}>Create</Button>
+						<Button disabled={isChanelCreationPending}>
+							{isChanelCreationPending && (
+								<Loader className="animate-spin size-4" />
+							)}
+							Create
+						</Button>
 					</div>
 				</form>
 			</DialogContent>

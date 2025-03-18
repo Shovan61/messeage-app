@@ -11,6 +11,7 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { ChevronDown, ListFilter, SquarePen } from "lucide-react";
 import { Hint } from "@/components/custom-ui-components/hint";
 import PreferencesModal from "./preferences-modal";
+import InviteModal from "./invite-modal";
 
 interface WorkspaceHeaderProps {
 	workspace: Doc<"workspaces">;
@@ -19,9 +20,16 @@ interface WorkspaceHeaderProps {
 
 function WorkspaceHeader({ workspace, isAdmin }: WorkspaceHeaderProps) {
 	const [preferencesOpen, setPreferencesOpen] = useState(false);
+	const [inviteOpen, setinviteOpen] = useState(false);
 
 	return (
 		<>
+			<InviteModal
+				open={inviteOpen}
+				setOpen={setinviteOpen}
+				name={workspace.name}
+				joinCode={workspace.joinCode}
+			/>
 			<PreferencesModal
 				open={preferencesOpen}
 				setOpen={setPreferencesOpen}
@@ -67,7 +75,9 @@ function WorkspaceHeader({ workspace, isAdmin }: WorkspaceHeaderProps) {
 								<DropdownMenuSeparator></DropdownMenuSeparator>
 								<DropdownMenuItem
 									className="cursor-pointer py-2"
-									onClick={() => {}}
+									onClick={() =>
+										setinviteOpen(true)
+									}
 								>
 									<span className="font-semibold text-xs">
 										Invite peope to{" "}
@@ -77,7 +87,9 @@ function WorkspaceHeader({ workspace, isAdmin }: WorkspaceHeaderProps) {
 								<DropdownMenuItem
 									className="cursor-pointer py-2"
 									onClick={() =>
-										setPreferencesOpen(true)
+										setPreferencesOpen(
+											true
+										)
 									}
 								>
 									<span className="font-semibold text-xs">

@@ -19,6 +19,7 @@ function Modals() {
 		<>
 			<CreateWorkspaceModal />
 			<CreateChannelModal />
+			
 		</>
 	);
 }
