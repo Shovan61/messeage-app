@@ -179,10 +179,14 @@ export const newJoinCode = mutation({
 			)
 			.unique();
 
-		if (!member) {
+		if (!member || member.role !== "admin") {
 			throw new Error("Unauthorized!");
 		}
 
-		
+		const newJoinCode = generateUniqueCode();
+
+		await ctx.db.patch(args.workspaceId, { joinCode: newJoinCode });
+
+		return args.workspaceId ;
 	},
 });

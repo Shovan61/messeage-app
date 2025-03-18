@@ -1,6 +1,7 @@
 import React from "react";
 import {
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
@@ -10,7 +11,8 @@ import { Button } from "@/components/ui/button";
 // import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
-import { CopyIcon } from "lucide-react";
+import { CopyIcon, RefreshCcw } from "lucide-react";
+import { useNewJoinCOde } from "@/features/workspaces/api/use-new-join-code";
 
 interface InviteModalProps {
 	open: boolean;
@@ -21,6 +23,7 @@ interface InviteModalProps {
 
 function InviteModal({ open, setOpen, name, joinCode }: InviteModalProps) {
 	const workspaceId = useWorkspaceId();
+	const { isNewJoinCodePending, newJoinCodeAPi } = useNewJoinCOde();
 
 	const handleClose = () => {
 		setOpen(false);
@@ -32,6 +35,27 @@ function InviteModal({ open, setOpen, name, joinCode }: InviteModalProps) {
 		window.navigator.clipboard
 			.writeText(inviteLink)
 			.then(() => toast.success("Invite link copied to clipboard"));
+	};
+
+	const handleNewCodeGeneration = async () => {
+		try {
+			newJoinCodeAPi(
+				{
+					workspaceId,
+				},
+				{
+					onSuccess() {
+						toast.success("New Code generated successfully!");
+					},
+					onError(error) {
+						console.log(error);
+						toast.error("Something went wrong!");
+					},
+				}
+			);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
@@ -58,6 +82,19 @@ function InviteModal({ open, setOpen, name, joinCode }: InviteModalProps) {
 						Copy Link
 						<CopyIcon className="size-4 ml-2" />
 					</Button>
+				</div>
+
+				<div className="flex items-center justify-between w-full">
+					<Button
+						onClick={handleNewCodeGeneration}
+						variant={"outline"}
+					>
+						New Code
+						<RefreshCcw className="size-4" />
+					</Button>
+					<DialogClose asChild>
+						<Button onClick={handleClose}>Close</Button>
+					</DialogClose>
 				</div>
 			</DialogContent>
 		</Dialog>
