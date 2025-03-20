@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 
@@ -18,9 +16,9 @@ type Options = {
 };
 
 export function useConfirmModal() {
-	const [open, setopen] = useState<boolean>(false);
+	const [open, setOpen] = useState<boolean>(false);
 	const [options, setOptions] = useState<Options | null>(null);
-	const [resolvePromise, setresolvePromise] = useState<(value: boolean) => void>();
+	const [resolvePromise, setResolvePromise] = useState<(value: boolean) => void>();
 
 	const confirm = (options: Options = {}): Promise<boolean> => {
 		setOptions({
@@ -30,16 +28,17 @@ export function useConfirmModal() {
 			cancelText: options.cancelText || "Cancel",
 		});
 
-		setopen(true);
+		setOpen(true);
 
 		return new Promise<boolean>((resolve) => {
-			setresolvePromise(() => resolve);
+			setResolvePromise(() => resolve);
 		});
 	};
 
 	const handleClose = (result: boolean) => {
-		setopen(result);
+		setOpen(false);
 		resolvePromise?.(result);
+		setResolvePromise(undefined); // Clear the resolve function
 	};
 
 	const ConfirmationDialog = () => (
@@ -59,7 +58,7 @@ export function useConfirmModal() {
 						{options?.cancelText}
 					</Button>
 					<Button
-						variant="destructive"
+						variant="default"
 						onClick={() => handleClose(true)}
 					>
 						{options?.confirmText}

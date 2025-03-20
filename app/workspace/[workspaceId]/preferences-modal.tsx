@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Loader, TrashIcon } from "lucide-react";
 import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
@@ -44,7 +37,7 @@ function PreferencesModal({ open, setOpen, initialValue }: PreferencesModalProps
 			workspaceUpdate(
 				{ workspaceId: id, name: editValue },
 				{
-					onSuccess: (data) => {
+					onSuccess: () => {
 						toast.success("Updated successfully!");
 						setvalue(editValue);
 						setOpen(false);
@@ -52,6 +45,7 @@ function PreferencesModal({ open, setOpen, initialValue }: PreferencesModalProps
 					},
 					onError: (err) => {
 						toast.error("Something Went wrong");
+						console.log(err);
 					},
 					onSetteled: () => {
 						setOpen(false);
@@ -73,8 +67,8 @@ function PreferencesModal({ open, setOpen, initialValue }: PreferencesModalProps
 			cancelText: "Cancel",
 		});
 
-		if(!isConfirmed) {
-			return false
+		if (!isConfirmed) {
+			return false;
 		}
 
 		try {
