@@ -16,14 +16,14 @@ function WorkspaceSidebar() {
 
 	const [_open, setOpen] = useCreateChannelModal();
 
-	const { channelData, isChannelLOading } = useGetChannelByWorkspaceId({ workspaceId });
+	const { channelData } = useGetChannelByWorkspaceId({ workspaceId });
 
 	const { data: memberData, isLoading: isMemberLoading } = useCurrentMember({ workspaceId });
 	const { data: workspaceData, isLoading: isWorkspaceLoading } = useGetWorkspaceByID({
 		workspaceId,
 	});
 
-	const { memberArrayDataLoading, membersArrayData } = useGetMembers({ workspaceId });
+	const { membersArrayData } = useGetMembers({ workspaceId });
 
 	if (isMemberLoading || isWorkspaceLoading) {
 		return (
