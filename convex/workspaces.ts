@@ -187,6 +187,46 @@ export const newJoinCode = mutation({
 
 		await ctx.db.patch(args.workspaceId, { joinCode: newJoinCode });
 
-		return args.workspaceId ;
+		return args.workspaceId;
+	},
+});
+
+export const joinMember = mutation({
+	args: { workspaceId: v.id("workspaces"), joinCode: v.string() },
+	handler: async (ctx, args) => {
+		const userId = await getAuthUserId(ctx);
+
+		if (!userId) {
+			throw new Error("Unauthorized!");
+		}
+
+		const workspace = await ctx.db.get(args.workspaceId);
+
+		if (!workspace) {
+			throw new Error("Workspace not found!");
+		}
+
+		const alreadyMember = await ctx.db
+			.query("members")
+			.withIndex("by_workspace_id_user_id", (q) =>
+				q.eq("workspaceId", args.workspaceId).eq("userId", userId)
+			)
+			.unique();
+
+		if (alreadyMember) {
+			throw new Error("Member already in this workspace!");
+		}
+
+		if (args.joinCode.toLowerCase() !== workspace.joinCode) {
+			throw new Error("Invalid code!");
+		}
+
+		await ctx.db.insert("members", {
+			userId,
+			workspaceId: args.workspaceId,
+			role: "member",
+		});
+
+		return workspace._id;
 	},
 });
