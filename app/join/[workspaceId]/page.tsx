@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import Image from "next/image";
 
 import VerificationInput from "react-verification-input";
@@ -21,7 +21,19 @@ function JoinPage() {
 	const { isWorkspaceInfoLoading, workspaceInforamtion } = useGetWorkspaceInfo({
 		workspaceId,
 	});
-	const { mutate , isPending} = useJoinMember();
+	const { mutate, isPending } = useJoinMember();
+
+	const isMember = useMemo(
+		() => workspaceInforamtion?.isMember,
+		[workspaceInforamtion?.isMember]
+	);
+
+useEffect(() => {
+ if(isMember){
+	router.push(`/workspace/${workspaceId}`)
+ }
+}, [router, workspaceId, isMember])
+
 
 	const handleComplete = async (values: string) => {
 		try {
@@ -71,8 +83,7 @@ function JoinPage() {
 					classNames={{
 						container: cn(
 							"flex gap-x-2 ",
-							isPending &&
-								"opacity-50 cursor-not-allowed"
+							isPending && "opacity-50 cursor-not-allowed"
 						),
 						character: "uppercase h-auto rounded-md border border-gray-300 text-lg flex items-center justify-center text-gray-500 font-medium",
 						characterInactive: "bg-muted",

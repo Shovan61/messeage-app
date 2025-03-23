@@ -1,6 +1,5 @@
 import { useWorkspaceId } from "@/components/hooks/use-workspaceid";
 import { Button } from "@/components/ui/button";
-import { Id } from "@/convex/_generated/dataModel";
 import { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";

@@ -13,6 +13,7 @@ import { Loader } from "lucide-react";
 
 function CreateChannelModal() {
 	const workspaceId = useWorkspaceId();
+
 	const router = useRouter();
 	const { isPending: isChanelCreationPending, mutate: createChannel } = useCreateChannel();
 
@@ -35,22 +36,25 @@ function CreateChannelModal() {
 					workspaceId,
 				},
 				{
-					onSuccess() {
+					onSuccess(channelId) {
 						handleClose();
-						// Todo 
-						router.push(`/workspace/${workspaceId}`);
-						toast.success("Created Ssuccessfully!");
+
+						router.push(
+							`/workspace/${workspaceId}/channel/${channelId}`
+						);
+						toast.success("Created Successfully!");
 					},
 					onError(error) {
 						handleClose();
 						console.log(error);
 
-						toast.success("Something went wrong!");
+						toast.error("Failed to create!");
 					},
 				}
 			);
 		} catch (error) {
 			console.log(error);
+			toast.error("Something went wrong!");
 		}
 	};
 
