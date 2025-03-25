@@ -4,7 +4,8 @@ import { PiTextAa } from "react-icons/pi";
 import Quill, { Delta, Op, type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import { Button } from "../ui/button";
-import { ImageIcon, SendIcon, SmileIcon } from "lucide-react";
+import { ImageIcon, SendIcon, SmileIcon, XIcon } from "lucide-react";
+import Image from 'next/image'
 
 type EditorValue = {
 	image: File | null;
@@ -166,8 +167,14 @@ function Editor({
 							<button
 								onClick={() => {
 									setimage(null);
+									imageElementRef.current!.value =
+										"";
 								}}
-							></button>
+								className="hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-white items-center justify-center"
+							>
+								<XIcon className="size-3.5" />
+							</button>
+                            <Image />
 						</div>
 					</div>
 				)}
