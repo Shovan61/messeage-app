@@ -31,7 +31,7 @@ function ChannelPage() {
 		<div className="flex flex-col h-full">
 			<Header channelName={channelData.name} />
 			<div className="flex-1" />
-			<ChatInput />
+			<ChatInput placeholder={`Message # ${channelData.name}`}/>
 		</div>
 	);
 }
