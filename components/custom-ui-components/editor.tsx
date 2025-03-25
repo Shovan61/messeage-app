@@ -34,6 +34,7 @@ function Editor({
 	innerRef,
 }: EditorProps) {
 	const [text, settext] = useState("");
+	const [isToolbarVisible, setisToolbarVisible] = useState(false);
 
 	const containerRef = useRef<HTMLDivElement>(null);
 	const submitRef = useRef(onSubmit);
@@ -126,24 +127,39 @@ function Editor({
 
 	const isEmpty = text.replace(/<[^>]*>/g, "").trim().length === 0;
 
+	const toogleToolbar = () => {
+		setisToolbarVisible((current) => !current);
+		const toolbarELement = containerRef.current?.querySelector(".ql-toolbar");
+
+		if (toolbarELement) {
+			toolbarELement.classList.toggle("hidden");
+		}
+	};
+
 	return (
 		<div className="flex flex-col">
 			<div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition-none bg-white">
 				<div ref={containerRef} className="h-full ql-custom" />
 				<div className="flex px-2 pb-2 z-[5]">
-					<Hint label="Hide formatting">
+					<Hint
+						label={
+							!isToolbarVisible
+								? "Hide formatting"
+								: "Show formatting"
+						}
+					>
 						<Button
-							disabled={false}
+							disabled={disabled}
 							size={"iconSm"}
 							variant={"ghost"}
-							onClick={() => {}}
+							onClick={toogleToolbar}
 						>
 							<PiTextAa className="size-4 " />
 						</Button>
 					</Hint>
 					<Hint label="Emoji">
 						<Button
-							disabled={false}
+							disabled={disabled}
 							size={"iconSm"}
 							variant={"ghost"}
 							onClick={() => {}}
@@ -154,7 +170,7 @@ function Editor({
 					{variant === "create" && (
 						<Hint label="Image">
 							<Button
-								disabled={false}
+								disabled={disabled}
 								size={"iconSm"}
 								variant={"ghost"}
 								onClick={() => {}}
@@ -178,7 +194,7 @@ function Editor({
 					{variant === "update" && (
 						<div className="ml-auto flex items-center gap-x-2">
 							<Button
-								disabled={false}
+								disabled={disabled || isEmpty}
 								variant={"outline"}
 								size={"sm"}
 								onClick={() => {}}
@@ -187,7 +203,7 @@ function Editor({
 								Cancel
 							</Button>
 							<Button
-								disabled={false}
+								disabled={disabled || isEmpty}
 								variant={"outline"}
 								size={"sm"}
 								onClick={() => {}}
