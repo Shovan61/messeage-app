@@ -63,6 +63,11 @@ function Editor({
 			theme: "snow",
 			placeholder: placeHolderRef.current,
 			modules: {
+				toolbar: [
+					["bold", "italic", "strike"],
+					["link"],
+					[{ list: "ordered" }, { list: "bullet" }],
+				],
 				keyboard: {
 					bindings: {
 						enter: {
@@ -71,6 +76,7 @@ function Editor({
 								return;
 							},
 						},
+
 						shift_enter: {
 							key: "Enter",
 							shiftKey: true,
