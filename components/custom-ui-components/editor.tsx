@@ -12,6 +12,7 @@ type EditorValue = {
 };
 
 import { Hint } from "./hint";
+import { cn } from "@/lib/utils";
 
 interface EditorProps {
 	variant?: "create" | "update";
@@ -61,6 +62,29 @@ function Editor({
 		const options: QuillOptions = {
 			theme: "snow",
 			placeholder: placeHolderRef.current,
+			modules: {
+				keyboard: {
+					bindings: {
+						enter: {
+							key: "Enter",
+							handler: () => {
+								return;
+							},
+						},
+						shift_enter: {
+							key: "Enter",
+							shiftKey: true,
+							handler: () => {
+								quill.insertText(
+									quill.getSelection()
+										?.index || 0,
+									"\n"
+								);
+							},
+						},
+					},
+				},
+			},
 		};
 
 		const quill = new Quill(editorContainer, options);
@@ -135,10 +159,12 @@ function Editor({
 					)}
 					{variant === "create" && (
 						<Button
-							disabled={isEmpty}
+							disabled={disabled || isEmpty}
 							size={"iconSm"}
 							onClick={() => {}}
-							className="ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 hover:text-white text-white"
+							className={cn(
+								"ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 hover:text-white text-white"
+							)}
 						>
 							<SendIcon className="size-4 " />
 						</Button>
