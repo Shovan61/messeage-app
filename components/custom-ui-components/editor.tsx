@@ -8,8 +8,8 @@ import { ImageIcon, SendIcon, SmileIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 
 type EditorValue = {
-	image: File | null;
 	body: string;
+	image: File | null;
 };
 
 import { Hint } from "./hint";
@@ -18,7 +18,7 @@ import EmojiPopover from "./emoji-popover";
 
 interface EditorProps {
 	variant?: "create" | "update";
-	onSubmit: ({ image, body }: EditorValue) => void;
+	onSubmit: ({ body, image }: EditorValue) => void;
 	onCancel?: () => void;
 	defaultValue?: Delta | Op[];
 	placeholder?: string;
@@ -78,7 +78,32 @@ function Editor({
 						enter: {
 							key: "Enter",
 							handler: () => {
-								return;
+								const text = quill.getText();
+								const addedImage =
+									imageElementRef.current
+										?.files?.[0] ||
+									null;
+
+								const isEmpty =
+									!addedImage &&
+									text
+										.replace(
+											/<[^>]*>/g,
+											""
+										)
+										.trim().length ===
+										0;
+
+								if (isEmpty) return;
+
+								const body = JSON.stringify(
+									quill.getContents()
+								);
+
+								submitRef.current?.({
+									body,
+									image: addedImage,
+								});
 							},
 						},
 
@@ -129,7 +154,7 @@ function Editor({
 		};
 	}, [innerRef]);
 
-	const isEmpty = text.replace(/<[^>]*>/g, "").trim().length === 0;
+	const isEmpty = !image && text.replace(/<[^>]*>/g, "").trim().length === 0;
 
 	const toogleToolbar = () => {
 		setisToolbarVisible((current) => !current);
@@ -164,19 +189,19 @@ function Editor({
 					<div className="p-2">
 						<div className="relative size-[62px] flex items-center justify-center group/image">
 							{/* Delete image button */}
-                            <Hint label="Remove image">
-                            <button
-								onClick={() => {
-									setimage(null);
-									imageElementRef.current!.value =
-										"";
-								}}
-								className="hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-white items-center justify-center"
-							>
-								<XIcon className="size-3.5" />
-							</button>
-                            </Hint>
-							
+							<Hint label="Remove image">
+								<button
+									onClick={() => {
+										setimage(null);
+										imageElementRef.current!.value =
+											"";
+									}}
+									className="hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-white items-center justify-center"
+								>
+									<XIcon className="size-3.5" />
+								</button>
+							</Hint>
+
 							<Image
 								src={URL.createObjectURL(image)}
 								fill
@@ -235,7 +260,14 @@ function Editor({
 						<Button
 							disabled={disabled || isEmpty}
 							size={"iconSm"}
-							onClick={() => {}}
+							onClick={() =>
+								onSubmit({
+									body: JSON.stringify(
+										quillRef.current?.getContents()
+									),
+									image: image,
+								})
+							}
 							className={cn(
 								"ml-auto bg-[#007a5a] hover:bg-[#007a5a]/80 hover:text-white text-white"
 							)}
@@ -250,7 +282,7 @@ function Editor({
 								disabled={disabled || isEmpty}
 								variant={"outline"}
 								size={"sm"}
-								onClick={() => {}}
+								onClick={onCancel}
 								className=" bg-[#007a5a] hover:bg-[#007a5a]/80 hover:text-white text-white"
 							>
 								Cancel
@@ -259,7 +291,14 @@ function Editor({
 								disabled={disabled || isEmpty}
 								variant={"outline"}
 								size={"sm"}
-								onClick={() => {}}
+								onClick={() =>
+									onSubmit({
+										body: JSON.stringify(
+											quillRef.current?.getContents()
+										),
+										image: image,
+									})
+								}
 								className=" bg-[#007a5a] hover:bg-[#007a5a]/80 hover:text-white text-white"
 							>
 								Save
