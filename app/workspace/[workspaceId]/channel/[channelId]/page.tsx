@@ -17,6 +17,7 @@ function ChannelPage() {
 			</div>
 		);
 	}
+
 	if (!channelData) {
 		return (
 			<div className="h-full flex flex-1 flex-col gap-y-2 items-center justify-center">
@@ -27,11 +28,12 @@ function ChannelPage() {
 			</div>
 		);
 	}
+
 	return (
 		<div className="flex flex-col h-full">
 			<Header channelName={channelData.name} />
 			<div className="flex-1" />
-			<ChatInput placeholder={`Message # ${channelData.name}`}/>
+			<ChatInput placeholder={`Message # ${channelData.name}`} />
 		</div>
 	);
 }

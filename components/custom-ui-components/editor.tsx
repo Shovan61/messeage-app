@@ -5,7 +5,7 @@ import Quill, { Delta, Op, type QuillOptions } from "quill";
 import "quill/dist/quill.snow.css";
 import { Button } from "../ui/button";
 import { ImageIcon, SendIcon, SmileIcon, XIcon } from "lucide-react";
-import Image from 'next/image'
+import Image from "next/image";
 
 type EditorValue = {
 	image: File | null;
@@ -164,7 +164,8 @@ function Editor({
 					<div className="p-2">
 						<div className="relative size-[62px] flex items-center justify-center group/image">
 							{/* Delete image button */}
-							<button
+                            <Hint label="Remove image">
+                            <button
 								onClick={() => {
 									setimage(null);
 									imageElementRef.current!.value =
@@ -174,7 +175,14 @@ function Editor({
 							>
 								<XIcon className="size-3.5" />
 							</button>
-                            <Image />
+                            </Hint>
+							
+							<Image
+								src={URL.createObjectURL(image)}
+								fill
+								alt="Uploaded"
+								className="rounded-xl border overflow-hidden object-cover"
+							/>
 						</div>
 					</div>
 				)}
@@ -222,6 +230,7 @@ function Editor({
 							</Button>
 						</Hint>
 					)}
+
 					{variant === "create" && (
 						<Button
 							disabled={disabled || isEmpty}
@@ -234,6 +243,7 @@ function Editor({
 							<SendIcon className="size-4 " />
 						</Button>
 					)}
+
 					{variant === "update" && (
 						<div className="ml-auto flex items-center gap-x-2">
 							<Button
@@ -258,6 +268,7 @@ function Editor({
 					)}
 				</div>
 			</div>
+
 			{variant === "create" && (
 				<div
 					className={cn(
