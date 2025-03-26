@@ -13,7 +13,6 @@ function ChatInput({ placeholder }: ChatInputProps) {
 
 	const handleSubmit = ({ body, image }: { body: string; image: File | null }) => {
 		console.log(body, image);
-		
 	};
 
 	return (
