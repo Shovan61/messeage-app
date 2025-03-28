@@ -21,7 +21,7 @@ export const create = mutation({
 		workspaceId: v.id("workspaces"),
 		channelId: v.optional(v.id("channels")),
 		parentMessageId: v.optional(v.id("messages")),
-		// To do add conversation id
+		conversationId: v.optional(v.id("conversations")),
 	},
 	handler: async (ctx, args) => {
 		const userId = await getAuthUserId(ctx);
