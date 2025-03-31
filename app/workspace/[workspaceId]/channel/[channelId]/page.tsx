@@ -12,6 +12,8 @@ function ChannelPage() {
 	const { channelData, isChannelLoading } = useGetChannelByChannelId({ channelId });
 	const { results } = useGetMessages({ channelId });
 
+	console.log(results, "-====================");
+
 	if (isChannelLoading) {
 		return (
 			<div className="h-full flex flex-1 items-center justify-center">
@@ -34,7 +36,7 @@ function ChannelPage() {
 	return (
 		<div className="flex flex-col h-full">
 			<Header channelName={channelData.name} />
-			{/* <div className="flex-1">{JSON.stringify(results)}</div> */}
+			<div className="flex-1">{JSON.stringify(results)}</div>
 			<ChatInput placeholder={`Message # ${channelData.name}`} />
 		</div>
 	);

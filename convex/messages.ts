@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query, QueryCtx } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { Id } from "./_generated/dataModel";
+import { Id, Doc } from "./_generated/dataModel";
 import { paginationOptsValidator } from "convex/server";
 
 const getMember = async (userId: Id<"users">, workspaceId: Id<"workspaces">, ctx: QueryCtx) => {
@@ -153,16 +153,110 @@ export const get = query({
 			_conversationId = parentMessage.conversationId;
 		}
 
-		const messages = await ctx.db
+		const results = await ctx.db
 			.query("messages")
-			.withIndex("by_channel_id_by_parent_message_id_by_conversation_id", (q) => {
-				q.eq("channelId", args.channelId)
-					.eq("parentMessageId", args.parentMessageId)
-					.eq("conversationId", _conversationId);
-			})
+			.withIndex("by_channel_id_by_parent_message_id_by_conversation_id", (q) =>
+				q
+					.eq("channelId", args?.channelId)
+					.eq("parentMessageId", args?.parentMessageId)
+					.eq("conversationId", _conversationId)
+			)
 			.order("desc")
 			.paginate(args.paginationOpts);
 
-		return messages;
+		return {
+			...results,
+			page: await Promise.all(
+				results.page
+					.map(async (message) => {
+						const member = await populateMember(
+							ctx,
+							message.memberId
+						);
+						const user = member
+							? await populateUser(ctx, member.userId)
+							: null;
+
+						if (!user || !member) return null;
+
+						const reactions = await populateReactions(
+							ctx,
+							message._id
+						);
+						const threads = await populateThreads(
+							ctx,
+							message._id
+						);
+
+						const image = message.image
+							? await ctx.storage.getUrl(message.image)
+							: undefined;
+
+						const reactionsWithCount = reactions.map(
+							(reaction) => {
+								return {
+									...reaction,
+									count: reactions.filter(
+										(cur) =>
+											cur.value ===
+											reaction.value
+									).length,
+								};
+							}
+						);
+
+						const dedupedReactions = reactionsWithCount.reduce(
+							(acc, reaction) => {
+								const existingReaction = acc.find(
+									// eslint-disable-next-line @typescript-eslint/no-explicit-any
+									(r: any) =>
+										r.value ===
+										reaction.value
+								);
+
+								if (existingReaction) {
+									existingReaction.memberIds =
+										Array.from(
+											new Set([
+												...existingReaction.memberIds,
+												reaction.memberId,
+											])
+										);
+								} else {
+									acc.push({
+										...reaction,
+										memberIds: [
+											reaction.memberId,
+										],
+									});
+								}
+
+								return acc;
+							},
+							[] as (Doc<"reactions"> & {
+								count: number;
+								memberIds: Id<"members">[];
+							})[]
+						);
+
+						const reactionswithoutMemberId =
+							dedupedReactions.map(
+								(memberId, ...rest) => rest
+							);
+
+						return {
+							...message,
+							image,
+							member,
+							user,
+							reactions: reactionswithoutMemberId,
+							threadCount: threads.count,
+							threadImage: threads.image,
+							threadTimestamp: threads.timestamp,
+						};
+					})
+					.filter((message) => message !== null)
+			),
+		};
 	},
 });
