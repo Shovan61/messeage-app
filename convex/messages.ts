@@ -114,7 +114,6 @@ export const create = mutation({
 			body: args.body,
 			image: args.image,
 			memberId: member._id,
-			updatedAt: Date.now(),
 			workspaceId: args.workspaceId,
 			channelId: args.channelId,
 			parentMessageId: args.parentMessageId,
