@@ -36,10 +36,10 @@ function Message({
 
 	if (isCompact) {
 		return (
-			<div className="flex flex-col p-1.5 gap-2 px-5 hover:bg-gray-100/60 group relative">
+			<div className="ml-6 flex flex-col p-1.5 gap-2 px-5 hover:bg-gray-100/60 group relative">
 				<div className="flex items-start gap-2 ">
 					<Hint label={formatFullTime(new Date(data._creationTime))}>
-						<button className="text-xs text-muted-foreground opacity-0 leading-[22px] group-hover:opacity-100 w-[40px] text-center hover:underline">
+						<button className="text-xs text-muted-foreground opacity-0 absolute bottom-7 leading-[22px] group-hover:opacity-100 w-[40px] text-center hover:underline">
 							{format(
 								new Date(data._creationTime),
 								"hh:mm"
@@ -56,7 +56,7 @@ function Message({
 		<div className="flex flex-col p-1.5 gap-2 px-5 hover:bg-gray-100/60 group relative">
 			<div className="flex items-start gap-2">
 				<button>
-					<Avatar className=" rounded-md mr-1">
+					<Avatar className=" rounded-md">
 						<AvatarImage
 							className="rounded-md size-5"
 							src={data.user.image}
@@ -66,8 +66,38 @@ function Message({
 						</AvatarFallback>
 					</Avatar>
 				</button>
+				<div className="flex flex-col w-full overflow-hidden">
+					<div className="text-sm">
+						<button
+							className="font-bold text-primary underline"
+							onClick={() => {}}
+						>
+							{data?.user?.name}
+						</button>
+						<span>&nbsp;&nbsp;</span>
+						<Hint
+							label={formatFullTime(
+								new Date(data._creationTime)
+							)}
+						>
+							<button className="text-xs text-muted-foreground hover:underline">
+								{format(
+									new Date(
+										data._creationTime
+									),
+									"h:mm a"
+								)}
+							</button>
+						</Hint>
+					</div>
+					<Renderer value={data.body} />
+					{data.updatedAt ? (
+						<span className="text-xs text-muted-foreground">
+							(edited)
+						</span>
+					) : null}
+				</div>
 			</div>
-			<Renderer value={data.body} />
 		</div>
 	);
 }

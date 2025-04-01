@@ -1,5 +1,5 @@
 import { GetMessageReturnType } from "@/features/messages/api/use-get-messages";
-import { format, isToday, isYesterday } from "date-fns";
+import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import React from "react";
 import Message from "./message";
 
@@ -26,6 +26,8 @@ const formatDateLabel = (dateStr: string) => {
 
 	return format(date, "EEEE MMMM d");
 };
+
+const TIME_THRESHOLD = 5;
 
 function MessageList({
 	channelCreationTime,
@@ -68,18 +70,32 @@ function MessageList({
 					</div>
 
 					{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-					{messages?.map((message: any, index: number) => (
-						<div key={index}>
-							<Message
-								data={message}
-								isEditing={false}
-								setIsEditing={() => {}}
-								isCompact={false}
-								hideThreadButton={false}
-                isAuthor={false}
-							/>
-						</div>
-					))}
+					{messages?.map((message: any, index: number) => {
+						const previousMessage = messages[index - 1];
+						const isCompact =
+							previousMessage &&
+							previousMessage?.user?._id ===
+								message?.user?._id &&
+							differenceInMinutes(
+								new Date(message?._creationTime),
+								new Date(
+									previousMessage?._creationTime
+								)
+							) < TIME_THRESHOLD;
+
+						return (
+							<div key={index}>
+								<Message
+									data={message}
+									isEditing={false}
+									setIsEditing={() => {}}
+									isCompact={isCompact}
+									hideThreadButton={false}
+									isAuthor={false}
+								/>
+							</div>
+						);
+					})}
 				</div>
 			))}
 		</div>
