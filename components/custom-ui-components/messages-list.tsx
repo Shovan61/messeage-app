@@ -20,17 +20,21 @@ function MessageList({
 	memberName,
 	variant,
 	canLoadMore,
-  loadMore,
-  isLoadingMore,
-  data
+	loadMore,
+	isLoadingMore,
+	data,
 }: MessageListProps) {
-	return <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto message-scroll">
-    {data?.map(message => (
-      <div key={message?._id}>
-        {JSON.stringify(message)}
-      </div>
-    ))}
-  </div>;
+	const groupMessages = data?.reduce(
+		(groups, message) => {},
+		{} as Record<string, typeof data>
+	);
+	return (
+		<div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto message-scroll">
+			{data?.map((message) => (
+				<div key={message?._id}>{JSON.stringify(message)}</div>
+			))}
+		</div>
+	);
 }
 
 export default MessageList;
