@@ -1,4 +1,4 @@
-import Quil from "quill";
+import Quill from "quill";
 import React, { useRef, useState, useEffect } from "react";
 
 interface RendererProps {
@@ -6,36 +6,28 @@ interface RendererProps {
 }
 
 function Renderer({ value }: RendererProps) {
-	const [isEmpty, setisEmplty] = useState(false);
+	const [isEmpty, setIsEmpty] = useState(false);
 	const rendereRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		const container = rendereRef.current;
+		try {
+			const contents = JSON.parse(value); // This might be failing!
+			const container = rendereRef.current;
+			if (!container) return;
 
-		const quill = new Quil(document.createElement("div"), {
-			theme: "snow",
-		});
+			const quill = new Quill(document.createElement("div"), {
+				theme: "snow",
+			});
+			quill.enable(false);
+			quill.setContents(contents);
 
-		quill.enable(false);
+			const isEmpty = quill.getText().trim().length === 0;
+			setIsEmpty(isEmpty);
 
-		const contents = JSON.parse(value);
-		quill.setContents(contents);
-
-		const isEmpty =
-			quill
-				.getText()
-				.replace(/<[^>]*>/g, "")
-				.trim().length === 0;
-
-		setisEmplty(isEmpty);
-
-		container?.innerHTML = quill.root.innerHTML;
-
-		return () => {
-			if (container) {
-				container.innerHTML = "";
-			}
-		};
+			container.innerHTML = quill.root.innerHTML;
+		} catch (error) {
+			console.error("Error in useEffect:", error);
+		}
 	}, [value]);
 
 	if (isEmpty) {
