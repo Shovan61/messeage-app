@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { format, isToday, isYesterday } from "date-fns";
 import { Hint } from "./hint";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+import Thumbnail from "./thumbnail";
 
 const Renderer = dynamic(() => import("@/components/custom-ui-components/renderer"), {
 	ssr: false,
@@ -30,7 +31,7 @@ function Message({
 	setIsEditing,
 	hideThreadButton,
 }: MessageProps) {
-	console.log(data);
+
 
 	const avatarFallback = data?.user?.name?.charAt(0)?.toUpperCase();
 
@@ -48,6 +49,7 @@ function Message({
 					</Hint>
 				</div>
 				<Renderer value={data.body} />
+				<Thumbnail url={data?.image || null}/>
 			</div>
 		);
 	}
@@ -91,6 +93,7 @@ function Message({
 						</Hint>
 					</div>
 					<Renderer value={data.body} />
+					<Thumbnail url={data?.image || null}/>
 					{data.updatedAt ? (
 						<span className="text-xs text-muted-foreground">
 							(edited)
