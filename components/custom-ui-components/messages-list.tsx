@@ -1,8 +1,11 @@
 import { GetMessageReturnType } from "@/features/messages/api/use-get-messages";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import Message from "./message";
 import ChannelHero from "./channel-hero";
+import { useWorkspaceId } from "../hooks/use-workspaceid";
+import { useCurrentMember } from "@/features/members/api/use-current-member";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface MessageListProps {
 	channelName?: string;
@@ -41,6 +44,11 @@ function MessageList({
 	isLoadingMore,
 	data,
 }: MessageListProps) {
+	const workspaceId = useWorkspaceId();
+	const { data: currentMemberData } = useCurrentMember({ workspaceId });
+
+	const [editingId, seteditingId] = useState<Id<"messages"> | null>(null);
+
 	const groupMessages = data?.reduce(
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		(groups: any, message: any) => {
@@ -88,11 +96,19 @@ function MessageList({
 							<div key={index}>
 								<Message
 									data={message}
-									isEditing={false}
-									setIsEditing={() => {}}
+									isEditing={
+										message._id ===
+										editingId
+									}
+									setEditingId={seteditingId}
 									isCompact={isCompact}
-									hideThreadButton={variant === "thread"}
-									isAuthor={false}
+									hideThreadButton={
+										variant === "thread"
+									}
+									isAuthor={
+										currentMemberData?._id ===
+										message?.memberId
+									}
 								/>
 							</div>
 						);
