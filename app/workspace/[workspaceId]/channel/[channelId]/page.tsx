@@ -37,11 +37,12 @@ function ChannelPage() {
 			<Header channelName={channelData.name} />
 			<MessageList
 				channelName={channelData.name}
-				channelCreationTime={channelData._creationTime}
+				channelCreationTime={channelData._creationTime.toString()}
 				data={results}
 				loadMore={loadMore}
 				isLoadingMore={status === "LoadingMore"}
 				canLoadMore={status === "CanLoadMore"}
+				variant="channel"
 			/>
 			<ChatInput placeholder={`Message # ${channelData.name}`} />
 		</div>

@@ -2,6 +2,7 @@ import { GetMessageReturnType } from "@/features/messages/api/use-get-messages";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import React from "react";
 import Message from "./message";
+import ChannelHero from "./channel-hero";
 
 interface MessageListProps {
 	channelName?: string;
@@ -57,7 +58,7 @@ function MessageList({
 		},
 		{} as Record<string, typeof data>
 	);
-	
+
 	return (
 		<div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto message-scroll">
 			{Object.entries(groupMessages || {}).map(([dateKey, messages]) => (
@@ -90,7 +91,7 @@ function MessageList({
 									isEditing={false}
 									setIsEditing={() => {}}
 									isCompact={isCompact}
-									hideThreadButton={false}
+									hideThreadButton={variant === "thread"}
 									isAuthor={false}
 								/>
 							</div>
@@ -98,6 +99,12 @@ function MessageList({
 					})}
 				</div>
 			))}
+			{variant === "channel" && channelName && channelCreationTime && (
+				<ChannelHero
+					name={channelName}
+					creationTime={Number(channelCreationTime)}
+				/>
+			)}
 		</div>
 	);
 }
