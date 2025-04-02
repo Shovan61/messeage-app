@@ -31,8 +31,6 @@ function Message({
 	setIsEditing,
 	hideThreadButton,
 }: MessageProps) {
-
-
 	const avatarFallback = data?.user?.name?.charAt(0)?.toUpperCase();
 
 	if (isCompact) {
@@ -49,7 +47,7 @@ function Message({
 					</Hint>
 				</div>
 				<Renderer value={data.body} />
-				<Thumbnail url={data?.image || null}/>
+				<Thumbnail url={data?.image || null} />
 			</div>
 		);
 	}
@@ -93,7 +91,7 @@ function Message({
 						</Hint>
 					</div>
 					<Renderer value={data.body} />
-					<Thumbnail url={data?.image || null}/>
+					<Thumbnail url={data?.image || null} />
 					{data.updatedAt ? (
 						<span className="text-xs text-muted-foreground">
 							(edited)
@@ -101,6 +99,16 @@ function Message({
 					) : null}
 				</div>
 			</div>
+			{!isEditing && (
+				<Toolbar
+					isAuthor={isAuthor}
+					isPending={false}
+					handleEdit={() => setIsEditing(data._id)}
+					handleThread={() => {}}
+					handleDelete={() => {}}
+					handleThreadButton={() => {}}
+				/>
+			)}
 		</div>
 	);
 }
